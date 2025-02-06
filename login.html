@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="shortcut icon" type="png" href="images/icon/favicon.png" />
+  <title>Login SignUp</title>
+  <link rel="stylesheet" type="text/css" href="loginStyle.css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+  <!-- It will redirect to the Home Page after submitting the form -->
+  <script>
+    $(document).ready(function () {
+      $("form").submit(function () {
+        alert("Great Job !");
+      });
+    });
+  </script>
+</head>
+
+<body>
+  <div class="form-box">
+    <div class="button-box">
+      <div id="btn"></div>
+      <button type="button" class="toggle-btn" id="log" onclick="loginRedirect()" style="color: #fff"> Log In
+      </button>
+      <button type="button" class="toggle-btn" id="reg" onclick="register()">
+        Register
+      </button>
+    </div>
+    <div class="social-icons">
+      <img src="images/icon/fb2.png" />
+      <img src="images/icon/insta2.png" />
+      <img src="images/icon/tt2.png" />
+    </div>
+
+    <!-- Login Form -->
+    <form id="login" class="input-group" action="index.html">
+      <div class="inp">
+        <input type="text" id="Name" name="loginFullName" class="input-field" placeholder="Username or Phone Number"
+          style="width: 88%; border: none;" required="required" />
+      </div>
+      <div class="inp">
+        <input type="text" id="Userid" name="loginuserId" class="input-field" placeholder="UserId"
+          style="width: 88%; border: none" required="required" />
+      </div>
+      <div class="inp">
+        <input type="password" id="Password" name="loginpassword" class="input-field" placeholder="Password"
+          style="width: 88%; border: none" required="required" />
+      </div>
+
+      <input type="checkbox" class="check-box" />Remember Password
+      <button type="button" class="submit-btn" onclick="login()">Log In</button>
+    </form>
+
+    <!-- Registration Form -->
+    <form action="index.html" method="post" id="register" class="input-group">
+      <input type="text" class="input-field" name="userId" placeholder="User ID" required="required" />
+      <input type="text" class="input-field" name="Fullname" placeholder="Full Name" required="required" />
+      <input type="email" class="input-field" name="Email" placeholder="Email Address" required="required" />
+      <input type="password" class="input-field" name="password" placeholder="Create Password" name="psame"
+        required="required" />
+      <input type="checkbox" class="check-box" id="chkAgree" onclick="goFurther()" />I agree to the Terms & Conditions
+      <button type="button" id="btnSubmit" class="submit-btn reg-btn" onclick="registerUser()"> Register </button>
+    </form>
+  </div>
+
+  <script type="text/javascript" src="script.js">
+  </script>
+  <script type="text/javascript">
+    function findUserByEmail(userId) {
+      let userdetails = localStorage.getItem("userDetails")
+      let userArray = JSON.parse(userdetails)
+      for (let i = 0; i < userArray.length; i++) {
+        if (userArray[i].userId === userId) {
+          return userArray[i];
+        }
+      }
+      return null;
+    }
+    function login() {
+      const fullName = document.querySelector('input[name="loginFullName"]').value;
+      const userId = document.querySelector('input[name="loginuserId"]').value;
+      const password = document.querySelector('input[name="loginpassword"]').value
+      let loggedInUser = findUserByEmail(userId)
+      if (loggedInUser == null) {
+        console.log("Please register to continue");
+      } else if (loggedInUser.password == password) {
+        console.log("Logged in successfully")
+        localStorage.setItem("login", userId)
+        window.location.href = "index.html";
+      }
+      else {
+        console.log("Invalid credentials")
+      }
+    }
+    function registerUser() {
+      const fullName = document.querySelector('input[name="Fullname"]').value;
+      const userId = document.querySelector('input[name="userId"]').value;
+      const email = document.querySelector('input[name="Email"]').value;
+      const password = document.querySelector('input[name="password"]').value
+      let userdetails = localStorage.getItem("userDetails")
+      let userArray = JSON.parse(userdetails)
+      let user = {
+        "userId": userId,
+        "fullName": fullName,
+        "email": email,
+        "password": password
+      }
+      if (userArray == null) {
+        userArray = [user]
+      } else {
+        userArray.push(user)
+      }
+      localStorage.setItem("userDetails", JSON.stringify(userArray))
+      loginRedirect()
+    }
+  </script>
+</body>
+
+</html>
